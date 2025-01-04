@@ -180,7 +180,7 @@
                     // Update card details with API response
                     detailsText.innerHTML = `<strong>Details</strong>`;
                     predictionStageText.innerHTML = `<strong>Prediction Stage:</strong> ${data.prediction  || 'Stage Unknown'}`;
-                    accuracyText.innerHTML = `<strong>Model Accuracy:</strong> ${data.accuracy || 'N/A'}%`;
+                    accuracyText.innerHTML = `<strong>Model Accuracy:</strong> ${data.accuracy || 'N/A'}`;
                 } else {
                     detailsText.innerHTML = `<strong>Error:</strong> Could not process the image.`;
                     predictionStageText.textContent = '';

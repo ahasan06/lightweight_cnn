@@ -13,15 +13,35 @@
         }
 
         header {
-            background-color: #004d99;
+            background-color:rgb(248, 210, 193);
             color: white;
             text-align: center;
-            padding: 1.5rem 0;
+            padding: 10px 0;
         }
 
         header h1 {
             margin: 0;
             font-size: 1.8rem;
+        }
+        .sample-images {
+            list-style-type: none;
+            padding: 0;
+            
+        }
+        
+        .sample-images li {
+            margin: 10px 0;
+        }
+        
+        .sample-images a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .sample-images a:hover {
+            text-decoration: underline;
+            color: #087f23;
         }
 
         main {
@@ -31,7 +51,22 @@
             justify-content: center;
             padding: 20px;
         }
-
+        .main-heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        /* Introductory paragraph styling */
+        .intro-text {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
         form {
             background: white;
             padding: 20px;
@@ -115,9 +150,19 @@
 </head>
 <body>
     <header>
-        <h1>VIT ==> CNN Model Prediction</h1>
+        <!-- Add the logo -->
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 150px;">
     </header>
     <main>
+        <h1 class="main-heading">Explore the Power of Lightweight CNN</h1>
+        <p class="intro-text">Download sample images and test how well the model predicts the stages of leukemia.</p>
+        <ul class="sample-images">
+            <li><a href="{{ url_for('static', filename='samples/early_sample.jpg') }}" download>Download Early Sample Image</a></li>
+            <li><a href="{{ url_for('static', filename='samples/pre_sample.jpg') }}" download>Download Pre Sample Image</a></li>
+            <li><a href="{{ url_for('static', filename='samples/pro_sample.jpg') }}" download>Download Pro Sample Image</a></li>
+            <li><a href="{{ url_for('static', filename='samples/begin_sample.jpg') }}" download>Download Begin Sample Image</a></li>
+        </ul>
+        <h2>Upload Your Sample Image for Prediction</h2>
         <form id="uploadForm">
             <label for="image">Upload an image:</label>
             <input type="file" id="image" name="image" accept="image/*" required>

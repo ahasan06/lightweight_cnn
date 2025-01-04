@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Model Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9fafb;
+        }
+
+        header {
+            background-color: #004d99;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+
+        button {
+            background-color: #004d99;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #003366;
+        }
+
+        .result-card {
+            margin-top: 30px;
+            text-align: left;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .result-card img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+        }
+
+        .result-section {
+            margin-top: 15px;
+            padding: 10px 0;
+            border-top: 1px solid #e6e6e6;
+        }
+
+        .result-section strong {
+            color: #004d99;
+        }
+
+        .details {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .prediction-stage, .model-accuracy {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .prediction-stage strong, .model-accuracy strong {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VIT ==> CNN Model Prediction</h1>
+    </header>
+    <main>
+        <form id="uploadForm">
+            <label for="image">Upload an image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <button type="submit">Predict</button>
+        </form>
+        <div class="result-card" id="resultCard" style="display: none;">
+            <img id="preview" src="" alt="Uploaded Image">
+            <div class="result-section details" id="detailsText">
+                <strong>Details:</strong> Leukemia Found
+            </div>
+            <div class="result-section prediction-stage" id="predictionStageText">
+                <strong>Prediction Stage:</strong> Stage 2
+            </div>
+            <div class="result-section model-accuracy" id="accuracyText">
+                <strong>Model Accuracy:</strong> 60.95%
+            </div>
+        </div>
+    </main>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('image');
+            const preview = document.getElementById('preview');
+            const detailsText = document.getElementById('detailsText');
+            const predictionStageText = document.getElementById('predictionStageText');
+            const accuracyText = document.getElementById('accuracyText');
+            const resultCard = document.getElementById('resultCard');
+
+            if (fileInput.files.length === 0) {
+                alert('Please select an image to upload.');
+                return;
+            }
+
+            // Preview the image
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            formData.append('image', file);
+
+            // Show loading state
+            detailsText.textContent = 'Processing...';
+            predictionStageText.textContent = '';
+            accuracyText.textContent = '';
+            resultCard.style.display = 'block';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update card details with API response
+                    detailsText.innerHTML = `<strong>Details</strong>`;
+                    predictionStageText.innerHTML = `<strong>Prediction Stage:</strong> ${data.prediction  || 'Stage Unknown'}`;
+                    accuracyText.innerHTML = `<strong>Model Accuracy:</strong> ${data.accuracy || 'N/A'}%`;
+                } else {
+                    detailsText.innerHTML = `<strong>Error:</strong> Could not process the image.`;
+                    predictionStageText.textContent = '';
+                    accuracyText.textContent = '';
+                }
+            } catch (error) {
+                console.error(error);
+                detailsText.innerHTML = `<strong>Error:</strong> Server error occurred.`;
+                predictionStageText.textContent = '';
+                accuracyText.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -72,7 +72,7 @@ def predict():
             predicted_confidence = np.max(predictions)
 
             # Define class labels
-            stage_labels = {0: "Begin", 1: "Early", 2: "Pre", 3: "Pro"}
+            stage_labels = {0: "Benign", 1: "Early", 2: "Pre", 3: "Pro"}
             predicted_stage = stage_labels.get(int(predicted_class[0]), "Unknown Stage")
 
             message = "Leukemia not found" if predicted_stage == "Unknown" else predicted_stage
